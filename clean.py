@@ -71,7 +71,7 @@ def main(args, logger):
 
             if torrent.status is 'seeding':
                 logger.info('deleting {0} (disk usage {1}GB)'.format(torrent.name,
-                            get_disk_space(args.mountpoint))
+                            get_disk_space(args.mountpoint)))
 
                 # delete and remove torrent with data
                 tc.stop_torrent(torrent.id)
