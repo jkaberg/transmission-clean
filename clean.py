@@ -54,7 +54,6 @@ def main(args, logger):
         torrents.remove(torrent)
     
     if delete:
-        print delete
         if not args.dryrun:
             tc.stop_torrent(delete)
             tc.remove_torrent(delete, delete_data=True)
