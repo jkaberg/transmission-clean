@@ -35,15 +35,15 @@ def main(args, logger):
         if torrent.ratio >= args.delete_ratio and age >= args.min_age:
             delete.append(torrent.id)
             logger.info('{0} with ratio {1} exceeded the delete ratio {2} and is more than {3} days old'.format(torrent.name,
-                                                                                                                 torrent.ratio,
-                                                                                                                 args.delete_ratio,
-                                                                                                                 args.min_age))
+                                                                                                                torrent.ratio,
+                                                                                                                args.delete_ratio,
+                                                                                                                args.min_age))
         # delete if torrent if its exhuasted the maximum age
         elif age >= args.max_age:
             delete.append(torrent.id)
             logger.info('{0} with ratio {1} is older than {2} days'.format(torrent.name, 
-                                                                            torrent.ratio,
-                                                                            args.max_age))
+                                                                           torrent.ratio,
+                                                                           args.max_age))
         # let know that no action has been taken
         else:
             logger.debug('{0} with ratio {1} which is {2} days old is not beeing deleted'.format(torrent.name,
@@ -54,15 +54,16 @@ def main(args, logger):
         torrents.remove(torrent)
     
     if delete:
+        print delete
         if not args.dryrun:
             tc.stop_torrent(delete)
             tc.remove_torrent(delete, delete_data=True)
-        logger.debug('deleting torrents with ids {1}'.format(delete))
+        logger.debug('deleting {0} torrents with ids {1}'.format(len(delete), ', '.join(str(i) for i in sorted(delete))))
 
     disk_usage = get_disk_space(args.mountpoint)
     if disk_usage < args.mountpoint_treshold:
         logger.info('disk usage {0}GB is below the treshold of {1}GB'.format(disk_usage,
-                                                                              args.mountpoint_treshold))
+                                                                             args.mountpoint_treshold))
 
     while get_disk_space(args.mountpoint) < args.mountpoint_treshold and not args.dryrun:
         for torrent in torrents:
@@ -71,7 +72,7 @@ def main(args, logger):
 
             if torrent.status is 'seeding':
                 logger.info('deleting {0} (disk usage {1}GB)'.format(torrent.name,
-                            get_disk_space(args.mountpoint)))
+                                                                     get_disk_space(args.mountpoint)))
 
                 # delete and remove torrent with data
                 tc.stop_torrent(torrent.id)
